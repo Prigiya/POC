@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Discussion Forum</title>
+        <link rel="stylesheet" href="css/styleh.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital@1&display=swap" rel="stylesheet">
+    </head>
+    
+    <body>
+        <header>
+          <div class="logo">
+              <img src="/css/images/logo.png" width="80" height="80"/>
+          </div>
+            <!--SearchBox Section-->
+            <div class="search-box">
+              
+              <div class="feedback">
+                <button type="button" class="feedback-button"><i class="fa fa-plus"></i>&nbsp;Give Feedback</button>
+              </div>
+                <div class="search-box-set">
+                  <i class="fa fa-search"></i>
+                    <input type="text" name="q" placeholder="search ...">
+                </div>
+            </div>
+        </header>
+        <div class="navbar">
+          <ul>
+            <li><a class="active" href="#">Home</a></li>
+            <!-- <li><a href="#">News</a></li>
+            <li><a href="#">Contact</a></li> -->
+            <li style="float:right"><a href="#" onclick="logout()">logout</a></li>
+          </ul>
+        </div>
+        <div class="container">
+         
+          
+            <!--Navigation-->
+            <div class="navigate">
+                <span><a href="">Content</a></span>
+            </div>
+            <div class="posts-table"></div>
+            <!--Display posts table-->
+            <div class="container mt-5 mb-5">
+                <div class="d-flex justify-content-center row">
+                    <div class="d-flex flex-column col-md-8">
+                        <div class="d-flex flex-row align-items-center text-left comment-top p-2 bg-white border-bottom px-4">
+                            
+                            <div class="d-flex flex-column ml-3">
+                                <div class="d-flex flex-row post-title titlepost">
+                                    <h2>
+                                        Title : <span id="titledata"></span>
+                                    </h2></div>
+                            </div>
+                            <br>
+                            <div class="d-flex flex-column ml-3 wd100 fleft">
+                                    <div class="d-flex flex-row post-title titlepost">
+                                        <h2>
+                                            Body : <span id="bodydata"></span>
+                                        </h2></div>
+                                <!-- <div class="d-flex flex-row align-items-center align-content-center post-title">
+                                    <span class="mr-2 comments">13 comments&nbsp;</span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="coment-bottom bg-white p-2 px-4">
+                            <div class="d-flex flex-row add-comment-section mt-4 mb-4"><label for="post">Comments</label>
+                                <form onsubmit="commentsub(event)">
+                                <textarea id="post" name="commentpost"
+                                          rows="5" cols="33">
+                                
+                                </textarea>
+                                <button class="button-15" role="button" type="submit">Submit</button>
+                                </form>
+                            </div>
+                            <div
+                                class="commented-section mt-2">
+                                <div class="d-flex flex-row align-items-center commented-user">
+                                    <h5 class="mr-2">Ipsum</h5><span class="dot mb-1"></span></div>
+                                <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
+                                <div class="reply-section">    
+                        </div>
+                    </div>
+                    <div class="commented-section mt-2">
+                        <div class="d-flex flex-row align-items-center commented-user">
+                            <h5 class="mr-2">Lorem</h5><span class="dot mb-1"></span></div>
+                        <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..</span></div>
+                        <div class="reply-section">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+            <!-----End comment part------------->
+            </div>
+
+        </div>
+    
+    <script>
+        console.log("window location:", window.location);
+
+        let idname = window.location.search;
+        console.log("Id:", idname );
+
+        let urlParams = new URLSearchParams(idname);
+        let contentid = urlParams.get("id")
+        console.log("Id is:", contentid);
+
+        window.onload = onPageLoad();
+      function onPageLoad(){
+
+        localStorage.setItem('logintoken',
+                JSON.stringify(
+                    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYWNzLnZob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjY2MjQ2MzU3LCJleHAiOjE2NjYyNDk5NTcsIm5iZiI6MTY2NjI0NjM1NywianRpIjoiRHpYYnZhMDhweTNzZDI3OCIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.f46yeyBRhGNopVq5gm42yw3IKBO2gNc0SmkC7Y6Yo_A'
+                    )
+            );
+
+        let token = JSON.parse(localStorage.getItem('logintoken'));
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://acs.vhost:8000/api/post/"+contentid);
+        xhr.withCredentials = true;
+        xhr.responseType = 'json';
+        // xhr.setRequestHeader("Authorization",'Bearer ' + token); 
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        //console.log(xhr);
+
+        
+
+        xhr.onload = () =>{
+        if(xhr.status >= 400){
+            console.log('failed');
+        }
+        else{
+          var responsedata = JSON.stringify(xhr.response);      
+          var jsonResult = JSON.parse(responsedata);
+          document.getElementById("titledata").innerHTML=JSON.stringify(jsonResult.title);
+          document.getElementById("bodydata").innerHTML=JSON.stringify(jsonResult.body);
+          console.log(jsonResult);
+        }
+      };
+       xhr.send();
+      }
+
+      function logout(){
+            localStorage.clear();
+            window.location.replace('/');
+        }
+
+    </script>
+    <script>
+        function commentsub(e){
+            e.preventDefault();
+
+                let commentdata= document.getElementsByName('commentpost');
+
+                var data = new FormData();
+                data.append('commentpost', commentdata[0].value);
+                // data.append("commentpost", "abc deffghtyhyrhhrhrg wefewfwefw sdkdj");
+                // data.append("like_dislike", "dislike");
+
+                var xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+
+                xhr.addEventListener("readystatechange", function() {
+                if(this.readyState === 4) {
+                    console.log(this.responseText);
+                    //console.log()
+                }
+                });
+
+                xhr.open("POST", "http://acs.vhost:8000/api/comment");
+                xhr.setRequestHeader("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYWNzLnZob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjY2MjQ2MzU3LCJleHAiOjE2NjYyNDk5NTcsIm5iZiI6MTY2NjI0NjM1NywianRpIjoiRHpYYnZhMDhweTNzZDI3OCIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.f46yeyBRhGNopVq5gm42yw3IKBO2gNc0SmkC7Y6Yo_A");
+
+                xhr.send(data);
+      }
+
+    </script>
+</body>
+</html>

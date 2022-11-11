@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Forum</title>
+    <link rel="stylesheet" href="css/styleh.css">
+    <link rel="icon" href="/css/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital@1&display=swap" rel="stylesheet"> -->
+</head>
+
+<body>
+    <header>
+      <div class="logo">
+          <img src="/css/images/logo.png" width="80" height="80"/>
+      </div>
+        <!--SearchBox Section-->
+        <div class="search-box">
+          <div class="headingtext">
+            <span><a>D</a>iscussion <a>F</a>orum</span>
+          </div>
+          <!-- <div class="feedback">
+            <button type="button" class="feedback-button"><i class="fa fa-plus"></i>&nbsp;Give Feedback</button>
+          </div> -->
+            <div class="search-box-set">
+              <i class="fa fa-search"></i>
+              <input id="myInput" onkeyup="searchTable()" type="text" placeholder="search ...">
+            </div>
+        </div>
+    </header>
+    <div class="navbar">
+      <ul>
+        <li><a class="active" href="home.html">Home</a></li>
+        <li style="border-right:none;"><a href="#">Welcome, &nbsp;&nbsp;<span id="username"></span></a></li> 
+        <!-- <li style="border-right:none;"><a href="#"> &nbsp;&nbsp;<span id="email"></span></a></li> 
+        <li style="border-right:none;"><a href="#"> &nbsp;&nbsp;<span id="roleid"></span></a></li>  -->
+        <!--<li><a href="#">Contact</a></li> -->
+        <li style="float:right"><a href="#" onclick="logout()">logout</a></li>
+      </ul>
+    </div>
+
+    
+
+    <div class="container">
+     
+      
+        <!--Navigation-->
+        <div class="navigate">
+            <span><a href="">Content</a></span>
+
+            <a href="javascript:void(0);" class="btn btn-primary addpostbtn fright" id="mpopupLink"> <i class="fa fa-plus size14">&nbsp;&nbsp;<span>Add New Post</span></i></a>
+        </div>
+       
+        
+        <div id="mpopupBox" class="mpopup">
+          <!-- Modal content -->
+          <div class="modal-content">
+              <div class="modal-header">
+                  <span class="close">×</span>
+                  <h2>New Post</h2>
+              </div>
+    
+              <div class="modal-body modal-body-height">
+                  
+                  <form onsubmit="newpostsub(event)">
+                    
+                      <div class="titlenew"><label>Title :</label> <input type="text" id="title" class="newposttext" name="title" required />
+                      </div>
+                   
+                   <br>
+                      <div class="bodynew"><label>Body :</label> <textarea id="post" name="body" required></textarea>
+                      </div>
+                    
+                      
+                      <input type="hidden" id="userid" value="" name="userid"/>
+                  </p>
+              </div>
+              <div class="modal-footer">
+                  <button role="button" type="submit"  class="button-15">Save</button>
+                  <p id="texto"></p>
+              </div>
+                  </form>
+          </div>
+      </div>
+        
+        <!--Display posts table-->
+        <div class="posts-table">
+
+            <div class="table-row" id="tabletitle"> <div class="el"> </div></div>
+            
+        </div>
+            <!--ends here-->
+      </div>
+  </div>
+
+    <!-- <script src="main.js"></script> -->
+    
+    <script>
+      window.onload = onPageLoad();
+      function onPageLoad(){
+
+        // localStorage.setItem('logintoken',
+        //         JSON.stringify(
+        //             'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYWNzLnZob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjY3NDc0Mjc3LCJleHAiOjE2Njc0Nzc4NzcsIm5iZiI6MTY2NzQ3NDI3NywianRpIjoiSXNEbnpFVmREQVdTR0FLaCIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.PCMyGGHhGEro4XgMMZXCKCY2JwNOP1yok-tvDgElS5k'
+        //             )
+        //     );
+
+        let token = JSON.parse(localStorage.getItem('logintoken'));
+        let username = JSON.parse(localStorage.getItem('username'));
+        // document.getElementById("username").innerHTML = username;
+        console.log(username);
+        console.log(token);
+
+        var xhrdata = new XMLHttpRequest();
+        xhrdata.open("GET", "http://acs.vhost:8000/api/userdata");
+        xhrdata.withCredentials = true;
+        xhrdata.responseType = 'json';
+        xhrdata.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+        xhrdata.onload = () =>{
+        if(xhrdata.status >= 400){
+            console.log('failed');
+            console.log(JSON.stringify(xhrdata.response));
+        }
+        else{
+          var responsedataa = JSON.stringify(xhrdata.response);
+          var jsonResulta = JSON.parse(responsedataa);
+
+          ////json filter
+          var arr = (jsonResulta);
+          
+          const filterKey = username;  
+          var len = arr.length; 
+          console.log(len);
+          
+          function findJsonString(arr,filterKey){
+          var result = [];  
+          
+          for (let i = len - 1; i >= 0; i--) {
+              var part1 = arr[i].email.indexOf(filterKey);
+              if(part1 != -1)
+              {                          
+                  // result[+i] = arr[i]; 
+                  result.push(arr[i]);                        
+              }
+          }
+          return result;
+          }         
+          console.log(findJsonString(arr,filterKey));
+
+          loginuser_data = (findJsonString(arr,filterKey));
+          emailid = loginuser_data[0]["email"];
+          name = loginuser_data[0]["name"];
+          roleid = loginuser_data[0]["role_id"];
+          id = loginuser_data[0]["id"];
+          // console.log("roleeeeee"+roleid);
+          var roleid = localStorage.setItem('roleid', JSON.stringify(roleid));
+          var user_id = localStorage.setItem('userid', JSON.stringify(id));
+          
+          document.getElementById("username").innerHTML = name ;
+          document.getElementById("userid").value = userid ;
+          // console.log(jsonResulta);
+        }
+      };
+      xhrdata.send();
+
+
+        var roleid_val = JSON.parse(localStorage.getItem('roleid'));
+        var userid = JSON.parse(localStorage.getItem('userid'));
+
+        if(roleid_val == 1){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://acs.vhost:8000/api/post");
+        xhr.withCredentials = true;
+        xhr.responseType = 'json';
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+        console.log(xhr);
+        xhr.onload = () =>{
+                if(xhr.status >= 400){
+            //reject(xhr.response);
+            console.log('failed');
+            console.log(JSON.stringify(xhr.response));
+        }
+        else{
+          
+          var responsedata = JSON.stringify(xhr.response);
+          
+          // alert(responsedata.length);
+       
+          var jsonResult = JSON.parse(responsedata);
+          console.log(jsonResult);
+          
+          var len = Object.keys(jsonResult).length;
+          
+          var obj1 = " ";
+          var obj2 = " ";
+          // var table = document.getElementById('myTable');
+          let text = "<table border='1' class='tabledata' id='myTable'>"
+          for (i=0; i<len; i++){
+
+            obj1 = jsonResult[i]["id"];
+
+            var noOfComment = JSON.parse(localStorage.getItem('no_of_comments'));
+            console.log("length"+noOfComment);
+            let postdate = jsonResult[i]["created_at"];
+            const myArray = postdate.split("T");
+            const dateArray = myArray[0];
+            date2 = dateArray.split("-").reverse().join("-");
+
+            text += "<tr><td class='count widthsno'></td><td><div class='subjects'> "+"<span class='titledata'>"+"<a class='el' href='"+ 'post.html?id='+ jsonResult[i]["id"] +"' id='title'>" +jsonResult[i]["title"] + "</a></span><br><span><a href='#' id='body'>"+ jsonResult[i]["body"] +"</a></span><br><span class='fright txt12'><b>Posted on : </b>"+ date2 +"</span></div></td><td><div class='activity'><i class='fa fa-thumbs-up yellow cmnt-count'><span>" + jsonResult[i]["likeCount"] + "</span></i> <i class='fa fa-thumbs-down blue cmnt-count'><span>" + jsonResult[i]["dislikeCount"] + "</span></i><i class='fa fa-comment red cmnt-count'><span>" + jsonResult[i]["commentCount"] + "</span></i> </div></td></tr>";
+          //  obj1 = jsonResult[i]["id"];
+                
+          }
+          text += "</table>"   
+         document.getElementById("tabletitle").innerHTML = text;          
+        //  console.log(xhr.response);
+        }
+      };
+      xhr.send();
+        } 
+  else if(roleid_val == 2){
+    // alert(userid);
+    var xhrrole = new XMLHttpRequest();
+    xhrrole.open("GET", "http://acs.vhost:8000/api/userpost/"+userid);
+    xhrrole.withCredentials = true;
+    xhrrole.responseType = 'json';
+    xhrrole.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+        xhrrole.onload = () =>{
+                if(xhrrole.status >= 400){
+            //reject(xhr.response);
+            console.log('failed');
+            console.log(JSON.stringify(xhrrole.response));
+        }
+        else{
+          var responsedata = JSON.stringify(xhrrole.response);
+          var colors = ["Blue", "Green", "Red", "Orange", "Violet", "Indigo", "Yellow"];
+console.log(colors.sort().reverse());
+          var jsonResult = JSON.parse(responsedata);
+          console.log(jsonResult);
+          
+          var len = Object.keys(jsonResult).length;
+          
+          var obj1 = " ";
+          var obj2 = " ";
+          // var table = document.getElementById('myTable');
+          let text = "<table border='1' class='tabledata' id='myTable'>"
+          for (i=0; i<len; i++){
+
+            obj1 = jsonResult[i]["id"];
+
+            var noOfComment = JSON.parse(localStorage.getItem('no_of_comments'));
+            console.log("length"+noOfComment);
+            let postdate = jsonResult[i]["created_at"];
+            const myArray = postdate.split("T");
+            const dateArray = myArray[0];
+            date2 = dateArray.split("-").reverse().join("-");
+
+            text += "<tr><td class='count widthsno'></td><td><div class='subjects'> "+"<span class='titledata'>"+"<a class='el' href='"+ 'post.html?id='+ jsonResult[i]["id"] +"' id='title'>" +jsonResult[i]["title"] + "</a></span><br><span><a href='#' id='body'>"+ jsonResult[i]["body"] +"</a></span><br><span class='fright txt12'><b>Posted on : </b>"+ date2 +"</span></div></td><td><div class='activity'><i class='fa fa-thumbs-up yellow cmnt-count'><span>" + jsonResult[i]["likeCount"] + "</span></i> <i class='fa fa-thumbs-down blue cmnt-count'><span>" + jsonResult[i]["dislikeCount"] + "</span></i><i class='fa fa-comment red cmnt-count'><span>" + jsonResult[i]["commentCount"] + "</span></i> </div></td></tr>";
+                
+          }
+          text += "</table>"   
+         document.getElementById("tabletitle").innerHTML = text;
+            // console.log(xhrrole.response);
+        }
+      };
+      xhrrole.send();
+  }else{
+
+  }   
+        
+      // xhr.send();
+     
+      //  document.getElementById("demo").innerHTML = xhr.response;
+      }
+
+  
+ 
+
+       function logout(){
+            localStorage.clear();
+            window.location.replace('/');
+        }
+
+        
+    </script>
+
+<script>
+  function newpostsub(e){
+      // alert('ydgd dgwd');
+      e.preventDefault();
+
+          let title= document.getElementsByName('title');
+          let body= document.getElementsByName('body');
+          let userid= document.getElementsByName('userid');
+
+          let token = JSON.parse(localStorage.getItem('logintoken'));
+
+          var data = new FormData();
+          data.append('title', title[0].value);
+          data.append('body', body[0].value);
+          data.append('userid', userid[0].value);
+
+          var xhr = new XMLHttpRequest();
+          xhr.withCredentials = true;
+
+          xhr.addEventListener("readystatechange", function() {
+          if(xhr.status==200 && this.readyState === 4) {
+              console.log(this.responseText);
+              document.getElementById('texto').innerHTML = "Thank you";
+              //console.log()
+              window.location.reload();
+          }
+          else{
+            document.getElementById('texto').innerHTML = "Not submitted";
+          }
+          });
+
+          xhr.open("POST", "http://acs.vhost:8000/api/post");
+          xhr.setRequestHeader("Authorization", "Bearer" + token.access_token);
+
+          xhr.send(data);
+}
+
+</script>
+
+
+ <!-------------------Modal Open----------------->
+ <script>
+  // Select modal
+  var mpopup = document.getElementById('mpopupBox');
+  
+  // Select trigger link
+  var mpLink = document.getElementById("mpopupLink");
+  
+  // Select close action element
+  var close = document.getElementsByClassName("close")[0];
+  
+  // Open modal once the link is clicked
+  mpLink.onclick = function() {
+      mpopup.style.display = "block";
+  };
+  
+  // Close modal once close element is clicked
+  close.onclick = function() {
+      mpopup.style.display = "none";
+  };
+  
+  // Close modal when user clicks outside of the modal box
+  window.onclick = function(event) {
+      if (event.target == mpopup) {
+          mpopup.style.display = "none";
+      }
+  };
+  </script>
+
+<script>
+  function searchTable() {
+      var input, filter, found, table, tr, td, i, j;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td");
+          for (j = 0; j < td.length; j++) {
+              if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                  found = true;
+              }
+          }
+          if (found) {
+              tr[i].style.display = "";
+              found = false;
+          } else {
+              tr[i].style.display = "none";
+          }
+      }
+  }
+  </script>
+    
+</body>
+</html>

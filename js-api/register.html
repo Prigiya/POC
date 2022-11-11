@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discussion Forum</title>
+  <link rel="icon" href="/css/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="logo">
+        <img src="/css/images/logo.png" width="80" height="80"/>
+    </div>
+    <!-- Discussion Forum -->
+    <div class="headingtext">
+      <span><a>D</a>iscussion <a>F</a>orum</span>
+    </div>
+  </header>
+                                
+    <form onsubmit="register(event)">
+        <div class="field role">
+          <div class="input-area">
+            <!-- <label for="role">Choose Role:</label> -->
+            <select name="role" id="role">
+              <option disabled selected value="0"> -- select role -- </option>
+              <option value="1" >Admin</option>
+              <option value="2">Author</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field name">
+            <div class="input-area">
+              <input type="text" name="name" placeholder="User Name" required>
+              <i class="icon fas fa-user"></i>
+              <i class="error error-icon fas fa-exclamation-circle"></i>
+            </div>
+            <div class="error error-txt">User Name can't be blank</div>
+          </div>
+      <div class="field email">
+        <div class="input-area">
+          <input type="text" name="email" placeholder="Email Address" required>
+          <i class="icon fas fa-envelope"></i>
+          <i class="error error-icon fas fa-exclamation-circle"></i>
+        </div>
+        <div class="error error-txt">Email can't be blank</div>
+      </div>
+      <div class="field password">
+        <div class="input-area">
+          <input type="password" name="password" placeholder="Password" required>
+          <i class="icon fas fa-lock"></i>
+          <i class="error error-icon fas fa-exclamation-circle"></i>
+        </div>
+        <div class="error error-txt">Password can't be blank</div>
+      </div>
+      <p id="messageText"></p>
+      <!-- <div class="pass-txt"><a href="#">Forgot password?</a></div> -->
+      <input type="submit" value="Register" id="btnlogin"/>
+      <!-- <button role="button" type="submit">Save</button> -->
+      <!-- <input type="submit" value="register"> -->
+    </form>
+    <div class="sign-txt">For Existing User? <a href="/">Login</a></div>
+  </div>
+
+  <!-- <script src="/js/scriptreg.js"></script> -->
+
+<script>
+  function register(e){
+      // alert('ydgd dgwd');
+      e.preventDefault();
+      
+          let roledata= document.getElementsByName('role');
+          let namedata= document.getElementsByName('name');
+          let emaildata= document.getElementsByName('email');
+          let passdata= document.getElementsByName('password');
+
+          let token = JSON.parse(localStorage.getItem('logintoken'));
+
+          var data = new FormData();
+          data.append('role', roledata[0].value);
+          data.append('name', namedata[0].value);
+          data.append('email', emaildata[0].value);
+          data.append('password', passdata[0].value);
+          // data.append("commentpost", "abc deffghtyhyrhhrhrg wefewfwefw sdkdj");
+          // data.append("like_dislike", "dislike");
+
+          var xhr = new XMLHttpRequest();
+          xhr.withCredentials = true;
+
+          xhr.addEventListener("readystatechange", function() {
+          if(xhr.status==200 && this.readyState === 4) {
+              console.log(this.responseText);
+              document.getElementById('messageText').innerHTML = "User Registered Successfully";
+              window.location.reload();
+              //console.log()
+          }
+          else{
+            document.getElementById('messageText').innerHTML = "User is not Registered, Try Again";
+          }
+          });
+
+          xhr.open("POST", "http://acs.vhost:8000/api/register");
+          // xhr.setRequestHeader("Authorization", "Bearer" + token.access_token);
+
+          xhr.send(data);
+}
+
+</script>
+
+</body>
+</html>

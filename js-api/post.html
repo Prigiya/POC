@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Discussion Forum</title>
+        <link rel="stylesheet" href="css/styleh.css">
+        <link rel="icon" href="/css/images/logo.png" type="image/png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <!-- <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital@1&display=swap" rel="stylesheet"> -->
+    </head>
+    
+    <body>
+        <header>
+            <div class="logo">
+                <img src="/css/images/logo.png" width="80" height="80"/>
+            </div>
+              <!--SearchBox Section-->
+              <div class="search-box">
+                <div class="headingtext">
+                    <span><a>D</a>iscussion <a>F</a>orum</span>
+                  </div>
+                <!-- <div class="feedback">
+                  <button type="button" class="feedback-button"><i class="fa fa-plus"></i>&nbsp;Give Feedback</button>
+                </div> -->
+                  <div class="search-box-set">
+                    <i class="fa fa-search"></i>
+                    <input id="myInput" onkeyup="searchTable()" type="text" placeholder="search ...">
+                  </div>
+              </div>
+          </header>
+          <div class="navbar">
+            <ul>
+              <li><a class="active" href="home.html">Home</a></li>
+              <li style="border-right:none;"><a href="#">Welcome, &nbsp;&nbsp;<span id="username"></span></a></li> 
+              <!-- <li><a href="#">News</a></li>
+              <li><a href="#">Contact</a></li> -->
+              <li style="float:right"><a href="#" onclick="logout()">logout</a></li>
+            </ul>
+          </div>  
+            
+        <div class="container">
+    
+            <!--Topic Section-->
+            <div class="topic-container">
+                <!--Original thread-->
+                <div class="head">
+                    <!-- <div class="authors">Title :</div> -->
+                    <div class="content"> <span id="titledata" class="red"></span></div>
+                </div>
+    
+                <div class="body">
+                    <div class="content">
+                        <span id="bodydata"></span>
+                        
+                        <br>
+                        <div class="regards-user">- <b><span id="userid"></span></b></div>
+                        <div class="divbox">
+                            <div class="likedislike">
+                                <div class="likes">
+                                    <form onsubmit="likesub(event)">
+                                        <input type="hidden" value="1" name="likedata" id="likedata"/>
+                                        <input type="hidden" id="likeid" value="" name="likeid"/>
+                                        <input type="hidden" id="userid_like" value="" name="userid_like"/>
+                                        <button role="button" type="submit" class="btnlike" id="likebtn">
+
+                                            <!-- <i onclick="myFunction(this)" class="fa fa-thumbs-up likeicon"></i> -->
+                                            <i class="fa fa-thumbs-up likeicon"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="dislikes">
+                                    <form onsubmit="dislikesub(event)">
+                                        <input type="hidden" value="1" name="dislikedata_dis" id="dislikedata_dis"/>
+                                        <input type="hidden" id="dislikeid" value="" name="dislikeid"/>
+                                        <input type="hidden" id="userid_dislike" value="" name="userid_dislike"/>
+                                        <button role="button" type="submit" class="btnlike" id="dislikebtn">
+                                            <!-- <i onclick="myFunction(this)" class="fa fa-thumbs-up likeicon"></i> -->
+                                            <i class="fa fa-thumbs-down dislikeicon"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <a href="javascript:void(0);" class="btn btn-primary commentbtn" id="mpopupLink"> <i class="fa fa-comment size100"></i></a>
+                        </div>
+                        
+                        <!-- Modal popup box -->
+                        <div id="mpopupBox" class="mpopup">
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="close">×</span>
+                                    <h2>Comments</h2>
+                                </div>
+
+                                <div class="modal-body modal-body-post">
+                                    <p>
+                                    <form onsubmit="commentsub(event)">
+                                        <textarea id="post" name="commentpost"></textarea>
+                                        <input type="hidden" id="postid" value="" name="postid"/>
+                                        <input type="hidden" id="userid_com" value="" name="userid"/>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button role="button" type="submit"  class="button-15">Save</button>
+                                </div>
+                                    </form>
+                            </div>
+                        </div>
+                        <!--------End modal-------------->
+
+                        <div id="mpopupBox_reply" class="mpopup">
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="close">×</span>
+                                    <h2>Reply</h2>
+                                </div>
+
+                                <div class="modal-body modal-body-post">
+                                    <p>
+                                    <form onsubmit="replysub(event)">
+                                        <textarea id="post" name="replypost"></textarea>
+                                        <input type="text" id="postid_reply" value="" name="postid"/>
+                                        <input type="text" id="commentid_reply" value="" name="commentid"/>
+                                        <input type="text" id="userid_reply" value="" name="userid"/>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button role="button" type="submit"  class="button-15">Save</button>
+                                </div>
+                                    </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+    
+            <!--Comment Area-->
+            <div class="comment-area hide" id="comment-area">
+                <textarea name="comment" id="" placeholder="comment here ... "></textarea>
+                <input type="submit" value="submit">
+            </div>
+    
+            <!--Reply Area-->
+            <div class="comment-area hide" id="reply-area">
+                <textarea name="reply" id="" placeholder="reply here ... "></textarea>
+                <input type="submit" value="submit">
+            </div>
+            <br>
+            
+            <span>Comments:</span>
+            <div class="table-row" id="tabletitle"></div>
+           
+    
+            
+    
+        </div>
+
+    
+    <script>
+        console.log("window location:", window.location);
+
+        let idname = window.location.search;
+        console.log("Id:", idname );
+
+        let urlParams = new URLSearchParams(idname);
+        let contentid = urlParams.get("id")
+        console.log("Id is:", contentid);
+
+        window.onload = onPageLoad();
+      function onPageLoad(){
+
+        // localStorage.setItem('logintoken',
+        //         JSON.stringify(
+        //             'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYWNzLnZob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjY3NDc5ODM4LCJleHAiOjE2Njc0ODM0MzgsIm5iZiI6MTY2NzQ3OTgzOCwianRpIjoiRFFHQ1NRSEt5N0JLdEo0eCIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.4GGDsYDAIs4ZZUj8bM3zf6Wk1-2fThtbG64HPEqaEEg'
+        //             )
+        //     );
+        let username = JSON.parse(localStorage.getItem('username'));
+        document.getElementById("username").innerHTML = username;
+
+        let token = JSON.parse(localStorage.getItem('logintoken'));
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://acs.vhost:8000/api/post/"+contentid);
+        xhr.withCredentials = true;
+        xhr.responseType = 'json';
+        // xhr.setRequestHeader("Authorization",'Bearer ' + token); 
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+        //console.log(xhr);
+        document.getElementById("postid").value= contentid
+        document.getElementById("postid_reply").value= contentid
+        document.getElementById("likeid").value= contentid
+        document.getElementById("dislikeid").value= contentid
+        // document.getElementById("postid").innerHTML=contentid;
+        // console.log(contentid);
+
+        
+
+        xhr.onload = () =>{
+        if(xhr.status >= 400){
+            console.log('failed');
+        }
+        else{
+          var responsedata = JSON.stringify(xhr.response);      
+          var jsonResult = JSON.parse(responsedata);
+          document.getElementById("titledata").innerHTML=JSON.stringify(jsonResult.title);
+          document.getElementById("bodydata").innerHTML=JSON.stringify(jsonResult.body);
+          document.getElementById("userid").innerHTML=JSON.stringify(jsonResult.user);
+          console.log(jsonResult);
+        }
+      };
+       xhr.send();
+
+       var xhrdata = new XMLHttpRequest();
+        xhrdata.open("GET", "http://acs.vhost:8000/api/userdata/");
+        xhrdata.withCredentials = true;
+        xhrdata.responseType = 'json';
+        xhrdata.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+       xhrdata.onload = () =>{
+        if(xhrdata.status >= 400){
+            console.log('failed');
+            console.log(JSON.stringify(xhrdata.response));
+        }
+        else{
+          var responsedataa = JSON.stringify(xhrdata.response);
+          var jsonResulta = JSON.parse(responsedataa);
+
+          var arr = (jsonResulta);
+          
+          const filterKey = username;  
+          var len = arr.length; 
+          console.log(len);
+          
+          function findJsonString(arr,filterKey){
+          var result = [];  
+          
+          for (let i = len - 1; i >= 0; i--) {
+              var part1 = arr[i].email.indexOf(filterKey);
+              if(part1 != -1)
+              {                          
+                  // result[+i] = arr[i]; 
+                  result.push(arr[i]);                        
+              }
+          }
+          return result;
+          }         
+          console.log(findJsonString(arr,filterKey));
+
+          loginuser_data = (findJsonString(arr,filterKey));
+          emailid = loginuser_data[0]["email"];
+          name = loginuser_data[0]["name"];
+          roleid = loginuser_data[0]["role_id"];
+          userid = loginuser_data[0]["id"];
+        //   console.log('useriddddddddd'+userid);
+          document.getElementById("username").innerHTML = name ;
+          document.getElementById("userid").value= userid;
+          document.getElementById("userid_com").value= userid;
+          document.getElementById("userid_reply").value= userid;
+          document.getElementById("userid_like").value= userid;
+          document.getElementById("userid_dislike").value= userid;
+
+        }
+      };
+      xhrdata.send();
+     
+
+
+      /*******************************************************Display Comment data*************************************/
+      var xhrcmnt = new XMLHttpRequest();
+      xhrcmnt.open("GET", "http://acs.vhost:8000/api/commentdata/"+contentid);
+      xhrcmnt.withCredentials = true;
+      xhrcmnt.responseType = 'json';
+      xhrcmnt.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
+      xhrcmnt.onload = () =>{
+        if(xhrcmnt.status >= 400){
+            console.log('failed');
+            console.log(JSON.stringify(xhrcmnt.response));
+        }
+        else{
+          var responsedatacmnt = JSON.stringify(xhrcmnt.response);
+          var jsonResultcmnt = JSON.parse(responsedatacmnt);
+
+
+        //   console.log(emailid);
+          console.log(jsonResultcmnt);
+        
+          var len = Object.keys(jsonResultcmnt).length;
+
+          var comlength = localStorage.setItem('no_of_comments', JSON.stringify(len));
+          var noOfComment = JSON.parse(localStorage.getItem('no_of_comments'));
+
+         console.log("length"+noOfComment)
+            var obj1 = " ";
+            var obj2 = " ";
+            // var table = document.getElementById('myTable');
+            let text = "<table class='tabledata' id='myTable'>"
+            for (i=0; i<len; i++){
+            var id=jsonResultcmnt[i]["commentId"]; 
+
+            let postdate = jsonResultcmnt[i]["createdat"];
+            const myArray = postdate.split("T");
+            const dateArray = myArray[0];
+            date2 = dateArray.split("-").reverse().join("-");
+             
+            text += "<tr><td><b><div class='count'></div></b>"+"</td><td><div class='subjects'><span>"+ jsonResultcmnt[i]["commentPost"] +"<br> - <b>"+ jsonResultcmnt[i]["user"] +"</b></span> </div></td><td><div class='replies'><br><span class='fright txt12'><b>Posted on : </b>"+ date2 +"</span></div></td></tr>";
+            }
+            text += "</table>"    
+            document.getElementById("tabletitle").innerHTML = text;
+
+            //////////////Code for modal//////////////
+            var mpopup_reply = document.getElementById('mpopupBox_reply');
+            var mpLink_reply = document.getElementById("mpopupLink_reply");
+            var close = document.getElementsByClassName("close")[0];
+            mpLink_reply.onclick = function() {
+                mpopup_reply.style.display = "block";
+            };
+            close.onclick = function() {
+                mpopup_reply.style.display = "none";
+            };
+            window.onclick = function(event) {
+                if (event.target == mpopup_reply) {
+                    mpopup_reply.style.display = "none";
+                }
+            };
+        //   document.getElementById("commentpostdata").innerHTML = JSON.stringify(jsonResultcmnt);
+        }
+      };
+     
+      xhrcmnt.send();
+    }
+      /*********************************************************End Comment Data ***************************************/
+
+      function logout(){
+            localStorage.clear();
+            window.location.replace('/');
+        }
+
+    </script>
+    <script>
+        function commentsub(e){
+            // alert('ydgd dgwd');
+            e.preventDefault();
+
+                let commentdata= document.getElementsByName('commentpost');
+                let postid= document.getElementsByName('postid');
+                let userid= document.getElementsByName('userid');
+                let token = JSON.parse(localStorage.getItem('logintoken'));
+
+                var data = new FormData();
+                data.append('commentpost', commentdata[0].value);
+                data.append('postid', postid[0].value);
+                data.append('userid', userid[0].value);
+
+                var xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+
+                xhr.addEventListener("readystatechange", function() {
+                if(this.readyState === 4) {
+                    console.log(this.responseText);
+                    window.location.reload();
+                    //console.log()
+                }
+                });
+
+                xhr.open("POST", "http://acs.vhost:8000/api/comment");
+                xhr.setRequestHeader("Authorization", "Bearer" + token.access_token);
+
+                xhr.send(data);
+      }
+
+    </script>
+
+    <script>
+
+function likesub(e){
+            // var button = document.getElementById("likebtn");
+            // button.addEventListener("click", onClick);
+
+            // function onClick() {
+            // console.log("Clicked");
+            // button.disabled = true;
+            // }
+            // alert('ydgd dgwd');m
+            e.preventDefault();
+           
+                let token = JSON.parse(localStorage.getItem('logintoken'));
+
+                let likedataa= document.getElementsByName('likedata');
+                // let dislikedataa= document.getElementsByName('dislikedata');
+                let likeid= document.getElementsByName('likeid');
+                let userid_like= document.getElementsByName('userid_like');
+
+                var data = new FormData();
+                data.append('likedata', likedataa[0].value);
+                // data.append('dislikedata', dislikedataa[0].value);
+                data.append('likeid', likeid[0].value);
+                data.append('userid_like', userid_like[0].value);
+                // data.append("commentpost", "abc deffghtyhyrhhrhrg wefewfwefw sdkdj");
+                // data.append("like_dislike", "dislike");
+
+                var xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+
+                xhr.addEventListener("readystatechange", function() {
+                if(this.readyState === 4) {
+                    console.log(this.responseText);
+                    //console.log()
+                }
+                });
+
+                xhr.open("POST", "http://acs.vhost:8000/api/like");
+                xhr.setRequestHeader('Authorization', 'Bearer'  + token.access_token);
+                
+                xhr.send(data);
+                
+      }
+
+
+      
+</script>
+<script>
+     var button1 = document.getElementById("likebtn");
+        button1.addEventListener("click", () => console.log("Liked"), {
+        once: true
+        }
+        );
+        
+
+        var button2 = document.getElementById("dislikebtn");
+        button2.addEventListener("click", () => console.log("DisLiked"), {
+        once: true,
+        });
+        
+</script>
+<script>
+
+      function dislikesub(e){
+            // alert('ydgd dgwd');
+            e.preventDefault();
+                let token = JSON.parse(localStorage.getItem('logintoken'));
+
+                // let likedata_disa= document.getElementsByName('likedata_dis');
+                let dislikedata_disa= document.getElementsByName('dislikedata_dis');
+                let dislikeid= document.getElementsByName('dislikeid');
+                let userid_dislike= document.getElementsByName('userid_dislike');
+
+                var data = new FormData();
+                // data.append('likedata_dis', likedata_disa[0].value);
+                data.append('dislikedata_dis', dislikedata_disa[0].value);
+                data.append('dislikeid', dislikeid[0].value);
+                data.append('userid_dislike', userid_dislike[0].value);
+
+                var xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+
+                xhr.addEventListener("readystatechange", function() {
+                if(this.readyState === 4) {
+                    console.log(this.responseText);
+                    //console.log()
+                }
+                });
+
+                xhr.open("POST", "http://acs.vhost:8000/api/dislike");
+                xhr.setRequestHeader("Authorization", "Bearer"  + token.access_token);
+
+                xhr.send(data);
+      }
+    </script>
+
+    <!-- <script>
+        function myFunction(x) {
+        x.classList.toggle("fa-thumbs-down");
+        }
+    </script> -->
+
+    <!-------------------Modal Open----------------->
+    <script>
+        var mpopup = document.getElementById('mpopupBox');
+        var mpLink = document.getElementById("mpopupLink");
+        var close = document.getElementsByClassName("close")[0];
+        mpLink.onclick = function() {
+            mpopup.style.display = "block";
+        };
+        close.onclick = function() {
+            mpopup.style.display = "none";
+        };
+        window.onclick = function(event) {
+            if (event.target == mpopup) {
+                mpopup.style.display = "none";
+            }
+        };
+        </script>
+
+<script>
+    function searchTable() {
+        var input, filter, found, table, tr, td, i, j;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+                found = false;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+    </script>
+</body>
+</html>
